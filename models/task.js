@@ -34,6 +34,20 @@ Task.getTaskById = function createUser(taskId, result) {
                 }
             });
 };
+Task.getAllUserTask = function getAllUserTask(userId, result) {
+        sql.query("Select * from tasks where user_id = ?", userId, function (err, res) {
+
+                if(err) {
+                    console.log("error: ", err);
+                    result(null, err);
+                }
+                else{
+                  console.log('tasks : ', res);
+
+                 result(null, res);
+                }
+            });
+};
 Task.getAllTask = function getAllTask(result) {
         sql.query("Select * from tasks", function (err, res) {
 

@@ -1,4 +1,5 @@
 'user strict';
+const bcrypt = require('bcrypt');
 var sql = require('./db.js');
 
 //User object constructor
@@ -10,8 +11,55 @@ var User = function(user){
     this.created_at = new Date();
 };
 
+User.loginUser = function loginUser(user, result){
+  sql.query("select * from users where email = ? ", user.email, function (err, res) {
+    if(err) {
+        console.log("error: ", err);
+        result(err, null);
+    }
+    else{
+          bcrypt.compare(user.password, res[0].password, function (err, ans) {
+            if (ans == true) {
+              result(null, res[0]);
+          } else {
+              result(err, null);
+          }
+
+      })
+    }
+  })
+}
+
+
 User.createUser = function createUser(newUser, result) {
-        sql.query("INSERT INTO users set ?", newUser, function (err, res) {
+
+     var userData = {
+       name: newUser.name,
+       email: newUser.email,
+       password: newUser.password,
+       created_at: new Date(),
+       updated_at: new Date()
+    }
+
+    var user = userData;
+
+    bcrypt.hash(user.password, 10, function(err, hash){
+         if(err) console.log(err);
+         user.password = hash;
+         sql.query("insert into users set ?",
+            user, function(err,res){ //saves non-hashed password
+              if(err) {
+                  console.log("error: ", err);
+                  result(err, null);
+              }
+              else{
+                  console.log(res.insertId);
+                  result(null, res.insertId);
+              }
+        });
+    });
+
+        /*sql.query("INSERT INTO users set ?", newUser, function (err, res) {
 
                 if(err) {
                     console.log("error: ", err);
@@ -21,7 +69,7 @@ User.createUser = function createUser(newUser, result) {
                     console.log(res.insertId);
                     result(null, res.insertId);
                 }
-            });
+            });*/
 };
 User.getUserById = function createUser(userId, result) {
         sql.query("Select * from users where id = ? ", userId, function (err, res) {

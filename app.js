@@ -11,20 +11,19 @@ const mysql = require('mysql');
 const mc = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: '',
     database: 'learnit',
-    socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
 });
 
 // connect to database
 mc.connect();
-
-app.listen(port);
 
 console.log('API server started on: ' + port);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var routes = require('./routes/approutes'); //importing route
+var routes = require('./routes/routes'); //importing route
 routes(app); //register the route
+
+app.listen(port);

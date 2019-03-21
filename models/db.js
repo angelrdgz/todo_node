@@ -6,9 +6,8 @@ var mysql = require('mysql');
 var connection = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
-    password : 'root',
-    database : 'learnit',
-    socketPath : '/Applications/MAMP/tmp/mysql/mysql.sock',
+    password : '',
+    database : 'learnit'
 });
 
 connection.connect(function(err) {

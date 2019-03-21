@@ -13,8 +13,22 @@ exports.list_all_tasks = function(req, res) {
   });
 };
 
+exports.user_tasks = function(req,res){
+  Task.getAllUserTask(req.params.userId, function(err, task) {
+
+    console.log('controller')
+    if (err)
+      res.send(err);
+      console.log('res', task);
+    res.json(task);
+  });
+};
+
 exports.create_a_task = function(req, res) {
+
   var new_task = new Task(req.body);
+
+  res.json(new_task)
 
   //handles nul
   if(!new_task.title || !new_task.description){
